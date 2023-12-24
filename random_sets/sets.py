@@ -38,7 +38,14 @@ class DataSourceSet(WeightedSet):
 
     def __init__(self, source: Path):
         self.source = DataSource(source.read_text())
+        self._populate()
+
+    def _populate(self):
         super().__init__(*[(key, value) for key, value in self.source.frequencies.items()])
+
+    def set_frequency(self, frequency: str):
+        self.source.set_frequency(frequency)
+        self._populate()
 
     def random(self):
         random_key = super().random()
