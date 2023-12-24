@@ -4,6 +4,12 @@ import yaml
 from typing import IO
 
 
+class UnknownFrequencyError(Exception):
+    """
+    Thrown when attempting to set a datasource's fequency without a frequency table in the metadat.
+    """
+
+
 class DataSource:
     """
     Represents a yaml data source used to generate roll tables.
@@ -65,6 +71,19 @@ class DataSource:
         if 'frequencies' in self.metadata:
             frequencies.update(**self.metadata['frequencies'])
         self.frequencies = frequencies[self.frequency]
+
+    def set_frequency(self, frequency: str) -> None:
+        """
+        Select a new frequency distribution from the data source metadata.
+        """
+        if 'frequencies' not in self.metadata:
+            raise UnknownFrequencyError(
+                "Cannnot set a new frequency because there is no frequency table in the metadata."
+            )
+        if frequency not in self.metadata['frequencies']:
+            raise UnknownFrequencyError(f"{frequency} is not present in the frequency table.")
+        self.frequency = frequency
+        self.init_frequencies()
 
     def random_frequencies(self, count: int = 1) -> list:
         """
