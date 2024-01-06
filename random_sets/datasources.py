@@ -122,9 +122,9 @@ class DataSource:
         """
 
         # If there is no data for the specified option, stop now.
-        flattened = [option]
+        flattened = []
         if not self.data[option]:
-            return flattened
+            return [option]
 
         if hasattr(self.data[option], 'keys'):
             # if the option is a dict, we assume the values are lists; we select a random item
@@ -151,16 +151,20 @@ class DataSource:
             if hasattr(choice, 'keys'):
                 for (k, v) in choice.items():
                     if type(v) is list:
-                        flattened.extend([k, *v])
+                        flattened.append([option, k, *v])
                     else:
-                        flattened.extend([k, v])
+                        flattened.append([option, k, v])
                 continue
 
             # if the member is a list, return the flattened list
-            if type(choice) is list:
+            elif type(choice) is list:
                 flattened.extend(choice)
                 continue
 
             # otherwise, return a list consisting of option and choice
             flattened.append(choice)
+
+        # Return all randomized values or just 1.
+        if rand:
+            return random.choice(flattened)
         return flattened
