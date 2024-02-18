@@ -124,6 +124,7 @@ class DataSource:
         # If there is no data for the specified option, stop now.
         flattened = []
         if not self.data[option]:
+            return [option]
             raise ValueError(f"There is no data for '{option}' in your data source.")
 
         if hasattr(self.data[option], 'keys'):

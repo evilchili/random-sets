@@ -56,6 +56,19 @@ def test_zero_frequency():
         assert 'Option 1' not in val
 
 
+def test_one_column_only():
+    fixture = StringIO(f"""
+{fixture_metadata}
+Option 1:
+Option 2:
+Option 3:
+""")
+    ds = datasources.DataSource(fixture)
+    vals = ds.random_values(count=10)
+    assert len(vals) == 10
+    assert len(vals[0]) == 1
+
+
 def test_distribution_accuracy_to_one_decimal_place():
     fixture = StringIO(fixture_metadata + fixture_source)
     ds = datasources.DataSource(fixture)
