@@ -22,7 +22,14 @@ class WeightedSet:
             self.members, self.weights = list(zip(*weighted_members))
 
     def random(self) -> str:
-        return random.choices(self.members, self.weights)[0]
+        nonzero_members = []
+        nonzero_weights = []
+        for i in range(self.weights):
+            if float(self.weights[i]) == 0.0:
+                continue
+            nozero_members.append(self.members[i])
+            nozero_weights.append(self.weights[i])
+        return random.choices(nonzero_members, nonzero_weights)[0]
 
     def __add__(self, obj):
         ws = WeightedSet()

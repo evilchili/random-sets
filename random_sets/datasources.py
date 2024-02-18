@@ -122,9 +122,9 @@ class DataSource:
         """
 
         # If there is no data for the specified option, stop now.
-        flattened = [option]
+        flattened = []
         if not self.data[option]:
-            return random.choice(flattened) if rand else flattened
+            raise ValueError(f"There is no data for '{option}' in your data source.")
 
         if hasattr(self.data[option], 'keys'):
             # if the option is a dict, we assume the values are lists; we select a random item

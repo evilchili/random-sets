@@ -1,7 +1,6 @@
 from io import StringIO
 
 from random_sets import datasources
-from pprint import pprint as print
 
 fixture_metadata = """
 metadata:
@@ -47,3 +46,31 @@ def test_datasource_random_values():
 
     # each value has an "Option", a "choice", and a "description"
     assert len(randvals[0]) == 3
+
+
+def test_zero_frequency():
+    fixture = StringIO(fixture_metadata + fixture_source)
+    ds = datasources.DataSource(fixture)
+    ds.set_frequency('nondefault')
+    for val in ds.random_values(count=100):
+        assert 'Option 1' not in val
+
+
+def test_distribution_accuracy_to_one_decimal_place():
+    fixture = StringIO(fixture_metadata + fixture_source)
+    ds = datasources.DataSource(fixture)
+    ds.set_frequency('nondefault')
+    counts = {
+        'Option 1': 0,
+        'Option 2': 0,
+        'Option 3': 0,
+    }
+
+    population = 10000
+
+    for val in ds.random_values(count=population):
+        counts[val[0]] += 1
+
+    for (option, count) in counts.items():
+        observed = count/population
+        assert round(observed, 1) == round(ds.frequencies[option], 1)
