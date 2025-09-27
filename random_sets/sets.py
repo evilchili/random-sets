@@ -24,11 +24,11 @@ class WeightedSet:
     def random(self) -> str:
         nonzero_members = []
         nonzero_weights = []
-        for i in range(self.weights):
+        for i in range(len(self.weights)):
             if float(self.weights[i]) == 0.0:
                 continue
-            nozero_members.append(self.members[i])
-            nozero_weights.append(self.weights[i])
+            nonzero_members.append(self.members[i])
+            nonzero_weights.append(self.weights[i])
         return random.choices(nonzero_members, nonzero_weights)[0]
 
     def __add__(self, obj):
